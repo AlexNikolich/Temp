@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+	<xs:complexType name="Sales">
+		<xs:sequence>
+			<xs:element name="CustomerID" type="Customer"></xs:element>
+			<xs:element name="ProductID" type="Product"></xs:element>
+			<xs:element name="SaleRepID" type="SalesRep"></xs:element>
+			<xs:element name="TimeID" type="Time"></xs:element>
+			<xs:element name="salesAmount" type="xs:decimal"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Customer">
+		<xs:sequence>
+			<xs:element name="customerID" type="xs:integer"></xs:element>
+			<xs:element name="firstName" type="xs:string"></xs:element>
+			<xs:element name="lastName" type="xs:string"></xs:element>
+			<xs:element name="address1" type="xs:string"></xs:element>
+			<xs:element name="address2" type="xs:string"></xs:element>
+			<xs:element name="city" type="xs:string"></xs:element>
+			<xs:element name="state" type="xs:string"></xs:element>
+			<xs:element name="zip" type="xs:string"></xs:element>
+			<xs:element name="country" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Product">
+		<xs:sequence>
+			<xs:element name="productID" type="xs:integer"></xs:element>
+			<xs:element name="productName" type="xs:string"></xs:element>
+			<xs:element name="productDescription" type="xs:string"></xs:element>
+			<xs:element name="unitPrice" type="xs:decimal"></xs:element>
+			<xs:element name="unitCost" type="xs:decimal"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="SalesRep">
+		<xs:sequence>
+			<xs:element name="salesRepID" type="xs:integer"></xs:element>
+			<xs:element name="firstName" type="xs:string"></xs:element>
+			<xs:element name="lastName" type="xs:string"></xs:element>
+			<xs:element name="address1" type="xs:string"></xs:element>
+			<xs:element name="address2" type="xs:string"></xs:element>
+			<xs:element name="city" type="xs:string"></xs:element>
+			<xs:element name="state" type="xs:string"></xs:element>
+			<xs:element name="zip" type="xs:string"></xs:element>
+			<xs:element name="country" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Time">
+		<xs:sequence>
+			<xs:element name="timeID" type="xs:integer"></xs:element>
+			<xs:element name="year" type="xs:integer"></xs:element>
+			<xs:element name="quarter" type="xs:integer"></xs:element>
+			<xs:element name="month" type="xs:integer"></xs:element>
+			<xs:element name="week" type="xs:integer"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:element name="listOfProducts">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ProductResponse" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="ProductResponse" type="Product" />
+	
+	<xs:element name="unitPriceRequest" type="xs:decimal"/>
+	<xs:element name="unitCostRequest" type="xs:decimal"/>
+	
+			
+
+
+</xs:schema>

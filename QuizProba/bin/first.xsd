@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+
+	<xs:complexType name="Student">
+		<xs:sequence>
+			<xs:element name="id">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="120" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="name">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="5" />
+						<xs:maxLength value="8" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="street">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="8" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="town" type="xs:string"></xs:element>
+			<xs:element name="phone" type="xs:int"></xs:element>
+			<xs:element name="enrollDate" type="xs:date"></xs:element>
+			<xs:element name="dropDate" type="xs:date"></xs:element>
+			<xs:element name="email" type="xs:string"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+
+	<xs:element name="SearchStudentsResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Response" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Response" type="Student" />
+
+
+
+	<!-- <xs:element name="SearchStudentsRequest"> <xs:complexType> <xs:sequence> 
+		<xs:element ref="Request" minOccurs="0" maxOccurs="unbounded" /> </xs:sequence> 
+		</xs:complexType> </xs:element> <xs:element name="Request" type="SearchStudentRequest" 
+		/> <xs:complexType name="SearchStudentRequest"> <xs:sequence> <xs:element 
+		name="name" type="xs:string" /> <xs:element name="phoneNumber" type="xs:string" 
+		/> <xs:element name="enrollDate" type="xs:date" /> <xs:element name="dropDate" 
+		type="xs:date" /> <xs:element name="emailAddress" type="xs:string" /> </xs:sequence> 
+		</xs:complexType> -->
+
+
+</xs:schema>

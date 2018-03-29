@@ -1,0 +1,281 @@
+Steps to use to create a webservice with xml
+
+If you are given a schema and asked to write a web service with a method to accept a java object (element in the schema / pojo) and return another java object (element in the schema / pojo); you will have to do the following
+
+      0. Make sure you are using java se 7 in eclipse as well as the command line commands
+
+    Create a dynamic web application
+    Place the schema in the project src directory
+    Run JAXB compiler to generate the POJOs in a package under src
+    Hit refresh on the project to get the generated POJOs
+    Create the package for the web service
+    Write the web service with the required method
+    Create the wsdl directory under web-inf
+    Compile your project
+    From the command line run wsgen
+    Hit refresh again
+    Compile the code again
+    Export the project to a WAR
+    Deploy to glass fish
+
+--------------------------------------------------------------
+
+
+Lab
+
+Create a web service method to accept two integer inputs return the sum of these two inputs.
+Build the java client to call this service method.
+
+
+
+1. try the project without @WebMethod
+
+2. put back the @WebMethod and add the following@WebMethod(operationName="add", action="urn:addNumbers")
+
+3. add another method to subtract and do the following@WebMethod(operationName="subtract", exclude=true)
+
+-------------------------------------------------------------------------
+
+4. try to use this annotation with different attributes @WebService annotation
+String endpointInterface 
+
+String name 
+
+String portName 
+
+String serviceName 
+
+String targetNamespace 
+
+String wsdlLocation 
+
+
+Thanks
+
+
+------------------------------------------------
+
+
+http://java.boot.by/scdjws5-guide/ch04s05.html
+
+------------------------------------------------
+
+
+1.	Create a dynamic web application in eclipse with the name WebService
+2.	Under the Java Resources folder, create a package named “helloservice.endpoint”
+3.	In that package create a class named Hello
+4.	Copy the below text to the file and save it
+package helloservice.endpoint;
+
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+
+@WebService
+public class Hello {
+    private String message = new String("Hello, ");
+
+    @WebMethod
+    public String sayHello(String name) {
+        return message + name + ".";
+    }
+}
+5.	Save your project and compile
+6.	Run the following command from your project directory command line “wsgen -classpath build/classes/ -wsdl -r WebContent/WEB-INF/wsdl -s src -d build/classes/ helloservice.endpoint.Hello” to generate the web service using wsgen tool
+7.	Refresh your project in eclipse 
+8.	You will see that you will get the web service directory and classes there
+9.	Also you will notice that there is a WSDL directory created under WEB-INF with the wsdl and the xsd
+10.	Compile the code again in eclipse
+11.	Export the code to a war file with the same name as the project
+12.	Run glass fish
+13.	Deploy the war file to class fish
+14.	Type the following in your browser http://localhost:8080/WebService/HelloService?wsdl this will get you the wsdl if everything is ok
+15.	Open the product SOAP UI from the list of your programs
+16.	Click on file
+17.	Create New SOAP UI Project
+18.	Attach the wsdl you generated 
+19.	You will see there will be a request node, add the text you want and click on the green arrow as it is in the picture below. You will call your service
+
+-------------------------------------------------
+
+•	Create java project in eclipse
+•	Place hello.xsd in the source directory
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+            jxb:version="2.0">
+
+<xsd:element name="Greetings" type="GreetingListType"/>
+<xsd:complexType name="GreetingListType">
+  <xsd:sequence>
+    <xsd:element name="Greeting" type="GreetingType"
+                 maxOccurs="unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="GreetingType">
+  <xsd:sequence>
+    <xsd:element name="Text" type="xsd:string"/>
+  </xsd:sequence>
+  <xsd:attribute name="language" type="xsd:language"/>
+</xsd:complexType>
+</xsd:schema>
+•	Run xjc -p hello hello.xsd
+•	From the source directory
+•	Refresh your environment. Hit F5
+•	Write the java file in the source directory
+import java.util.*;
+import javax.xml.bind.*;
+import hello.*;
+
+public class Hello {
+
+    private ObjectFactory of;
+    private GreetingListType grList;
+
+    public Hello(){
+        of = new ObjectFactory();
+        grList = of.createGreetingListType();
+    }
+
+    public void make( String t, String l ){
+        GreetingType g = of.createGreetingType();
+        g.setText( t );
+        g.setLanguage( l );
+        grList.getGreeting().add( g );
+    }
+
+    public void marshal() {
+        try {
+            JAXBElement<GreetingListType> gl =
+                of.createGreetings( grList );
+            JAXBContext jc = JAXBContext.newInstance( "hello" );
+            Marshaller m = jc.createMarshaller();
+            m.marshal( gl, System.out );
+        } catch( JAXBException jbe ){
+            // ...
+        }
+    }
+    
+    
+    public static void main( String args[])
+    {
+    	
+    	Hello h = new Hello();
+    	h.make( "Bonjour, madame", "fr" ); 
+    	h.make( "Hey, you", "en" ); 
+    	h.marshal();
+    }
+}
+
+
+------------------------------------------------------------------
+
+Glassfish startup and shutdown script
+
+Glassfish startup script example
+
+@Echo offEcho Starting Glassfish on localhost:4848 timeout 5
+
+C:\glassfish4\bin\asadmin.bat start-domain domain1
+
+Glassfish shutdown script example
+
+@Echo off C:\glassfish4\bin\asadmin.bat stop-domain domain1
+
+-------------------------------------------------------------------
+
+
+public class ConsumeWs {
+
+    public static void main(String[] args) throws Exception {
+        URL wsdlUrl = new URL("http://localhost:8080/jaxws-handler-chain/greeting?wsdl");
+        QName qname = new QName("http://ws.memorynotfound.com/", "GreetingServiceImplService");
+        QName port = new QName("http://ws.memorynotfound.com/", "GreetingServiceImplPort");
+        Service service = Service.create(wsdlUrl, qname);
+        GreetingService greetingService = service.getPort(port, GreetingService.class);
+        System.out.println(greetingService.printMessage());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------
+
+
+package helloservice.endpoint;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+
+
+@WebService(serviceName="salce1")
+@SOAPBinding(
+	    style = SOAPBinding.Style.DOCUMENT,
+	    use = SOAPBinding.Use.LITERAL,
+	    parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
+public class Hello {
+	
+
+
+
+
+	@WebMethod( operationName="SubmitPO" )
+    public List<Orders> sayHello(String name) {
+    	
+
+    	List<Orders> lo1 = new ArrayList<>();
+    	
+    	lo1 = ajdebre();
+    	
+    	
+    	return lo1;
+    }
+
+
+   
+	private List<Orders> ajdebre() {
+		List<Orders> lo = new ArrayList<>();
+    	Orders ord1 = new Orders();
+    	Orders ord2 = new Orders();
+    	
+    	Customers cust = new Customers();
+    	cust.setCustomerId(100);
+    	cust.setNameCustomer("salce");
+    	
+    	Employees emp = new Employees();
+    	emp.setEmployeesId(50);
+    	emp.setNameEmployees("rererer");
+    	
+    	ord1.setCustomers(cust);
+    	ord1.setEmployees(emp);
+    	
+    	lo.add(ord1);
+    	lo.add(ord2);
+    	
+    	return lo;
+		
+	}
+}
+
+
+
+
+
+
+
+
+
